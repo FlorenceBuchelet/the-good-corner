@@ -1,0 +1,74 @@
+GET http://localhost:3000/
+
+###
+
+GET http://localhost:3000/ads
+
+###
+
+POST http://localhost:3000/ads
+Content-Type: application/json
+
+{
+    "id": 1,
+    "title": "rollers",
+    "description":
+        "My roller is blue, working fine. I'm selling it because I've got a new one",
+    "owner": "roller.seller@gmail.com",
+    "price": 10,
+    "picture":
+        "https://images.lecho.be/view?iid=dc:113129565&context=ONLINE&ratio=16/9&width=640&u=1508242455000",
+    "location": "Lille",
+    "createdAt": "2023-09-05T10:13:14.755Z"
+}
+
+###
+
+DELETE http://localhost:3000/ads
+Content-Type: application/json
+
+{
+    "id": 1
+}
+
+###
+PUT http://localhost:3000/ads
+Content-Type: application/json
+
+{
+    "id": 2,
+    "newAd": {
+        "id": 2,
+        "title": "rolLLLLLlers",
+        "description":
+            "My roller is blue, working fine. I'm selling it because I've got a new one",
+        "owner": "roller.seller@gmail.com",
+        "price": 10,
+        "picture":
+            "https://images.lecho.be/view?iid=dc:113129565&context=ONLINE&ratio=16/9&width=640&u=1508242455000",
+        "location": "Lille",
+        "createdAt": "2023-09-05T10:13:14.755Z"
+        }
+}
+
+###
+
+GET http://localhost:3000/movies/count
+Content-Type: text/plain
+
+###
+
+GET http://localhost:3000/movies/totalBudget
+Content-Type: text/plain
+
+###
+
+GET http://localhost:3000/movies?minYear=2010
+Content-Type: text/plain
+
+###
+
+GET http://localhost:3000/movies?requestedTime=11:30
+Content-Type: text/plain
+
+###
