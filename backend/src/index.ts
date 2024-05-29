@@ -1,10 +1,44 @@
 import express from "express";
 import fs from 'node:fs';
+import sqlite3 from 'sqlite3';
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+
+// SQLite initialization
+let db = new sqlite3.Database('good_corner', (err) => {
+    if (err) {
+        return console.error("Error in opening db connection: ", err.message);
+    }
+    console.log("Connected to SQLite");
+})
+
+const data = fs.readFileSync(`${__dirname}../../database/queries.sql`).toString();
+const dataArray = data.toString().split(";");
+
+db.serialize(() => {
+    db.run("BEGIN TRANSACTION;");
+    dataArray.forEach(query => {
+        if (query) {
+            query += ";";
+            db.run(query, err => {
+                if (err) throw err;
+            });
+        }
+    });
+    db.run("COMMIT;");
+});
+
+/* db.close(err => {
+    if (err) {
+        return console.error("Error in closing db connection: ", err.message)
+    }
+    console.log("Closed db connection.");
+})  */
+
+// end SQLite intitialization
 
 let ads = [
     {
@@ -34,19 +68,30 @@ let ads = [
 ];
 
 // HOME
-
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
 // ADS
-
+// GET all ads (number and content) or per city
 app.get("/ads", (req, res) => {
-    console.log('GET ads requested: ', ads.length, ' ads returned');
+    if (!req.query.city) {
 
-    res.send(ads);
+        db.all("SELECT * FROM `ad`;", (err, rows) => {
+            res.send(rows);
+            console.log('GET ads requested: ', rows.length, ' ads returned');
+        })
+    } else {
+        console.log("CITY", req.query.city);
+
+        db.all(`SELECT * FROM ad WHERE city='${req.query.city}';`, (err, rows) => {
+            res.send(rows);
+            console.log(`GET ads requested: ${rows.length} ads in ${req.query.city}`);
+        })
+    }
 });
 
+// add an ad
 app.post("/ads", (req, res) => {
     for (let i = 0; i < ads.length; i++) {
         if (req.body.title === ads[i].title) {
@@ -66,11 +111,17 @@ app.post("/ads", (req, res) => {
     res.send(ads);
 })
 
+// delete an ad + delete if more than 40€
 app.delete("/ads", (req, res) => {
     ads = ads.filter((ad) => ad.id !== req.body.id);
     res.send("The ad was deleted");
 });
 
+app.delete("/ads/value", (req, res) => {
+    
+})
+
+// update an ad
 app.put("/ads", (req, res) => {
     ads = ads.map((ad) => {
         if (ad.id !== req.body.id) {
@@ -83,27 +134,28 @@ app.put("/ads", (req, res) => {
     res.send(ads);
 })
 
-// MOVIES
+/**
+ * MOVIES
+ */
 
+// make CSV workable
 const movies: string = fs.readFileSync(`${__dirname}/movies.csv`, { encoding: 'utf-8' });
 const moviesLines: string[] = movies.split('\n');
 const allMovies: any = [];
 moviesLines.forEach((movie) => {
     const singleMovie: string[] = movie.split(";")
     allMovies.push(singleMovie);
-    console.log(singleMovie);
-    
 })
 
+// retourne le nombre de films dans le fichier
 app.get('/movies/count', (req, res) => {
-    // retourne le nombre de films dans le fichier
     console.log(allMovies);
-    
+
     console.log(`There are ${moviesLines.length - 1} movies in our list.`);
 });
 
+// budget nécessaire pour voir tous les films
 app.get('/movies/totalBudget', (req, res) => {
-    // budget nécessaire pour voir tous les films
 
     let budget: number = 0;
     for (let i = 1; i < allMovies.length; i++) {
@@ -112,9 +164,9 @@ app.get('/movies/totalBudget', (req, res) => {
     console.log(`You need ${budget} dollarz to see all this`);
 });
 
+// query string use
 app.get('/movies', (req, res) => {
     let response: string[] = [];
-    // si requestedTime return les films qui ont une séance à cette heure
     if (req.query.minYear) {
         for (let i = 1; i < allMovies.length; i++) {
             if (allMovies[i][2] > req.query.minYear) {
@@ -122,6 +174,7 @@ app.get('/movies', (req, res) => {
             }
         }
     } else if (req.query.requestedTime) {
+        // si requestedTime return les films qui ont une séance à cette heure
         for (let i = 1; i < allMovies.length; i++) {
             if (allMovies[i][4].includes(req.query.requestedTime)) {
                 response.push(allMovies[i]);
