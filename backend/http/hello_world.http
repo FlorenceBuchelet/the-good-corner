@@ -10,6 +10,32 @@ GET http://localhost:3000/ads?city=Paris
 
 ###
 
+GET http://localhost:3000/ads?category=voiture
+###
+
+GET http://localhost:3000/ads/categories
+Content-Type: application/json
+
+[
+    "voiture", "vêtement"
+]
+###
+
+GET http://localhost:3000/ads/category/average
+
+###
+
+GET http://localhost:3000/ads/letter
+Content-Type: application/json
+
+{
+    "letter": "2"
+}
+###
+
+DELETE http://localhost:3000/ads/value?price=15
+
+###
 POST http://localhost:3000/ads
 Content-Type: application/json
 

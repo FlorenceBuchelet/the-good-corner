@@ -75,20 +75,69 @@ app.get("/", (req, res) => {
 // ADS
 // GET all ads (number and content) or per city
 app.get("/ads", (req, res) => {
-    if (!req.query.city) {
-
+    if (!req.query.city && !req.query.category) {
         db.all("SELECT * FROM `ad`;", (err, rows) => {
             res.send(rows);
             console.log('GET ads requested: ', rows.length, ' ads returned');
         })
-    } else {
-        console.log("CITY", req.query.city);
-
+    } else if (req.query.city) {
         db.all(`SELECT * FROM ad WHERE city='${req.query.city}';`, (err, rows) => {
             res.send(rows);
             console.log(`GET ads requested: ${rows.length} ads in ${req.query.city}`);
         })
+    } else if (req.query.category) {
+        db.all(`SELECT * FROM ad
+                JOIN category ON category.id = ad.category_id
+                WHERE category.title = '${req.query.category}';`,
+            (err, rows) => {
+                res.send(rows);
+                console.log(`GET ads requested: ${rows.length} ads in ${req.query.category}`);
+            })
     }
+});
+
+// one or more categories
+app.get("/ads/categories", (req, res) => {
+    const initialQuery = `SELECT * FROM ad 
+                            JOIN category ON category.id = ad.category_id
+                            WHERE `;
+    let bodyQuery = `category.title = '${req.body[0]}'`;
+    if (req.body.length > 0) {
+        for (let i = 1; i < req.body.length; i++) {
+            bodyQuery = bodyQuery + ` OR category.title = '${req.body[i]}'`
+        }
+    } else {
+        bodyQuery = `category.title = '${req.body[0]}`
+    };
+    const preparedQuery = initialQuery + bodyQuery + ";";
+    db.all(preparedQuery, (err, rows) => {
+        res.send(rows);
+        console.log('GET ads requested: ', rows.length, ' ads returned');
+    })
+});
+
+// average category (TODO: add param)
+app.get("/ads/category/average", (req, res) => {
+    db.all(`SELECT AVG(price) AS price FROM ad
+            JOIN category ON category.id = ad.category_id
+            WHERE category.title = "autre";`, // TODO:requete préparée
+        (err, rows: any) => {
+            res.send(rows);
+            console.log('Average price in', 'autre', 'is', rows[0].price);
+        })
+})
+
+// categories starting with one letter
+app.get("/ads/letter", (req, res) => {
+    const query = db.prepare(
+        `SELECT * FROM ad
+            JOIN category ON category.id = ad.category_id
+            WHERE ad.title LIKE ?;`
+    );
+    query.all([`%${req.body.letter}%`], (err, rows) => {
+        res.send(rows);
+        console.log('These ads contain the character', req.body.letter);
+    });
 });
 
 // add an ad
@@ -111,14 +160,17 @@ app.post("/ads", (req, res) => {
     res.send(ads);
 })
 
-// delete an ad + delete if more than 40€
+// delete an ad 
 app.delete("/ads", (req, res) => {
     ads = ads.filter((ad) => ad.id !== req.body.id);
     res.send("The ad was deleted");
 });
 
+// delete if more than 40€
 app.delete("/ads/value", (req, res) => {
-    
+    const query = db.prepare("DELETE FROM ad WHERE price >= ?;");
+    query.run([req.query.price]);
+    console.log("Ads were deleted");
 })
 
 // update an ad
