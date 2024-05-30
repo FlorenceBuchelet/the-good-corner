@@ -13,11 +13,11 @@ GET http://localhost:3000/ads?city=Paris
 GET http://localhost:3000/ads?category=voiture
 ###
 
-GET http://localhost:3000/ads/categories
+GET http://localhost:3000/ads/category
 Content-Type: application/json
 
 [
-    "voiture", "vêtement"
+    "voiture", "autre"
 ]
 ###
 

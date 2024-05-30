@@ -97,7 +97,7 @@ app.get("/ads", (req, res) => {
 });
 
 // one or more categories
-app.get("/ads/categories", (req, res) => {
+app.get("/ads/category", (req, res) => {
     const initialQuery = `SELECT * FROM ad 
                             JOIN category ON category.id = ad.category_id
                             WHERE `;
