@@ -1,3 +1,4 @@
+
 export type AdCardProp = {
     imgUrl: string;
     title: string;
