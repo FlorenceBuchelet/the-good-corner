@@ -1,71 +1,42 @@
+import "reflect-metadata";
 import express from "express";
 import fs from 'node:fs';
-import sqlite3 from 'sqlite3';
+import { DataSource } from "typeorm";
+import { Ad } from "./entities/Ad";
+import { Category } from "./entities/Category";
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 
-// SQLite initialization
-let db = new sqlite3.Database('good_corner', (err) => {
-    if (err) {
-        return console.error("Error in opening db connection: ", err.message);
-    }
-    console.log("Connected to SQLite");
-})
-
-const data = fs.readFileSync(`${__dirname}../../database/queries.sql`).toString();
-const dataArray = data.toString().split(";");
-
-db.serialize(() => {
-    db.run("BEGIN TRANSACTION;");
-    dataArray.forEach(query => {
-        if (query) {
-            query += ";";
-            db.run(query, err => {
-                if (err) throw err;
-            });
-        }
-    });
-    db.run("COMMIT;");
+// TypeORM setup
+// Datasource
+export const dataSource = new DataSource({
+    type: "sqlite",
+    database: `${__dirname}../../database/good_corner.sqlite`,
+    entities: [`${__dirname}/entities/*.ts`],
+    synchronize: true,
 });
 
-/* db.close(err => {
-    if (err) {
-        return console.error("Error in closing db connection: ", err.message)
-    }
-    console.log("Closed db connection.");
-})  */
+// Classes
 
-// end SQLite intitialization
+class Ad {
+    #id: number;
+    #title: string;
+    #description?: string;
+    #author: string;
+    #price: number;
+    #createdAt: Date;
+    #picture?: string;
+    #city: string;
+    #category_id?: number;
 
-let ads = [
-    {
-        id: 1,
-        title: "Bike to sell",
-        description:
-            "My bike is blue, working fine. I'm selling it because I've got a new one",
-        owner: "bike.seller@gmail.com",
-        price: 100,
-        picture:
-            "https://images.lecho.be/view?iid=dc:113129565&context=ONLINE&ratio=16/9&width=640&u=1508242455000",
-        location: "Paris",
-        createdAt: "2023-09-05T10:13:14.755Z",
-    },
-    {
-        id: 2,
-        title: "Car to sell",
-        description:
-            "My car is blue, working fine. I'm selling it because I've got a new one",
-        owner: "car.seller@gmail.com",
-        price: 10000,
-        picture:
-            "https://www.automobile-magazine.fr/asset/cms/34973/config/28294/apres-plusieurs-prototypes-la-bollore-bluecar-a-fini-par-devoiler-sa-version-definitive.jpg",
-        location: "Paris",
-        createdAt: "2023-10-05T10:14:15.922Z",
-    },
-];
+
+}
+
+// ----------------------------------------------
+// Router 
 
 // HOME
 app.get("/", (req, res) => {
@@ -74,7 +45,7 @@ app.get("/", (req, res) => {
 
 // ADS
 // GET all ads (number and content) or per city
-app.get("/ads", (req, res) => {
+/* app.get("/ads", (req, res) => {
     if (!req.query.city && !req.query.category) {
         db.all("SELECT * FROM `ad`;", (err, rows) => {
             res.send(rows);
@@ -94,10 +65,10 @@ app.get("/ads", (req, res) => {
                 console.log(`GET ads requested: ${rows.length} ads in ${req.query.category}`);
             })
     }
-});
+}); */
 
 // one or more categories
-app.get("/ads/category", (req, res) => {
+/* app.get("/ads/category", (req, res) => {
     const initialQuery = `SELECT * FROM ad 
                             JOIN category ON category.id = ad.category_id
                             WHERE `;
@@ -114,10 +85,10 @@ app.get("/ads/category", (req, res) => {
         res.send(rows);
         console.log('GET ads requested: ', rows.length, ' ads returned');
     })
-});
+}); */
 
 // average category (TODO: add param)
-app.get("/ads/category/average", (req, res) => {
+/* app.get("/ads/category/average", (req, res) => {
     db.all(`SELECT AVG(price) AS price FROM ad
             JOIN category ON category.id = ad.category_id
             WHERE category.title = "autre";`, // TODO:requete préparée
@@ -125,10 +96,10 @@ app.get("/ads/category/average", (req, res) => {
             res.send(rows);
             console.log('Average price in', 'autre', 'is', rows[0].price);
         })
-})
+}) */
 
 // categories starting with one letter
-app.get("/ads/letter", (req, res) => {
+/* app.get("/ads/letter", (req, res) => {
     const query = db.prepare(
         `SELECT * FROM ad
             JOIN category ON category.id = ad.category_id
@@ -138,7 +109,7 @@ app.get("/ads/letter", (req, res) => {
         res.send(rows);
         console.log('These ads contain the character', req.body.letter);
     });
-});
+}); */
 
 // add an ad
 app.post("/ads", (req, res) => {
@@ -161,20 +132,20 @@ app.post("/ads", (req, res) => {
 })
 
 // delete an ad 
-app.delete("/ads", (req, res) => {
+/* app.delete("/ads", (req, res) => {
     ads = ads.filter((ad) => ad.id !== req.body.id);
     res.send("The ad was deleted");
-});
+}); */
 
 // delete if more than 40€
-app.delete("/ads/value", (req, res) => {
+/* app.delete("/ads/value", (req, res) => {
     const query = db.prepare("DELETE FROM ad WHERE price >= ?;");
     query.run([req.query.price]);
     console.log("Ads were deleted");
-})
+}) */
 
 // update an ad
-app.put("/ads", (req, res) => {
+/* app.put("/ads", (req, res) => {
     ads = ads.map((ad) => {
         if (ad.id !== req.body.id) {
             return ad;
@@ -184,7 +155,7 @@ app.put("/ads", (req, res) => {
     });
 
     res.send(ads);
-})
+}) */
 
 /**
  * MOVIES
@@ -237,6 +208,7 @@ app.get('/movies', (req, res) => {
 });
 
 
-app.listen(port, () => {
+app.listen(port, async () => {
+    await dataSource.initialize();
     console.log(`Example app listening on port ${port}`);
 });
