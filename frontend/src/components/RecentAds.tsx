@@ -1,10 +1,25 @@
 import { log } from "console";
 import AdCard, { AdCardProp } from "./AdCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 function RecentAds() {
     const [total, setTotal] = useState(0);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+ //               const result = await axios.get("http://localhost:4000/ads");
+                const result = await fetch("http://localhost:4000/ads");
+                const data = await result.json();
+                console.log(data);
+            } catch (err) {
+                console.error("Error during data fetching:", err);
+            }
+        }
+        fetchData();
+    }, []);
 
     const ads: AdCardProp[] = [
         {

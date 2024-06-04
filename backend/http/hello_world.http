@@ -1,42 +1,44 @@
-GET http://localhost:3000/
+GET http://localhost:4000/
 
-###
+### Get all ads
 
-GET http://localhost:3000/ads
+GET http://localhost:4000/ads
 
-###
+### Get all ads for a specific city
 
-GET http://localhost:3000/ads?city=Paris
+GET http://localhost:4000/ads?city=Bordeaux
 
-###
+### Get all ads for a specific category
 
-GET http://localhost:3000/ads?category=voiture
-###
+GET http://localhost:4000/ads?category=voiture
 
-GET http://localhost:3000/ads/category
+### Filter multiple categories
+
+GET http://localhost:4000/ads/category
 Content-Type: application/json
 
 [
     "voiture", "autre"
 ]
-###
 
-GET http://localhost:3000/ads/category/average
+### Average price in a category
 
-###
+GET http://localhost:4000/ads/category/average
 
-GET http://localhost:3000/ads/letter
+### 
+
+GET http://localhost:4000/ads/letter
 Content-Type: application/json
 
 {
     "letter": "2"
 }
-###
+### Delete by price
 
-DELETE http://localhost:3000/ads/value?price=15
+DELETE http://localhost:4000/ads/value?price=15
 
-###
-POST http://localhost:3000/ads
+### Add an ad
+POST http://localhost:4000/ads
 Content-Type: application/json
 
 {
@@ -52,17 +54,17 @@ Content-Type: application/json
     "createdAt": "2023-09-05T10:13:14.755Z"
 }
 
-###
+### Delete an ad
 
-DELETE http://localhost:3000/ads
+DELETE http://localhost:4000/ads
 Content-Type: application/json
 
 {
     "id": 1
 }
 
-###
-PUT http://localhost:3000/ads
+### Update an ad
+PUT http://localhost:4000/ads
 Content-Type: application/json
 
 {
@@ -81,24 +83,24 @@ Content-Type: application/json
         }
 }
 
-###
+### SECOND TOPIC
 
-GET http://localhost:3000/movies/count
+GET http://localhost:4000/movies/count
 Content-Type: text/plain
 
 ###
 
-GET http://localhost:3000/movies/totalBudget
+GET http://localhost:4000/movies/totalBudget
 Content-Type: text/plain
 
 ###
 
-GET http://localhost:3000/movies?minYear=2010
+GET http://localhost:4000/movies?minYear=2010
 Content-Type: text/plain
 
 ###
 
-GET http://localhost:3000/movies?requestedTime=11:30
+GET http://localhost:4000/movies?requestedTime=11:30
 Content-Type: text/plain
 
 ###
