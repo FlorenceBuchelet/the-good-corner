@@ -5,6 +5,7 @@ import { DataSource } from "typeorm";
 import { Ad } from "./entities/Ad";
 import { Category } from "./entities/Category";
 import { Tag } from "./entities/Tag";
+import { Cyril } from "./entities/Cyril";
 
 const app = express();
 const port = 4000;
@@ -161,6 +162,8 @@ async function cleanDB() {
     await dataSource.manager.clear(Ad);
     await dataSource.manager.clear(Category);
     await dataSource.manager.clear(Tag);
+    await dataSource.manager.clear(Cyril);
+    await dataSource.query("DELETE FROM sqlite_sequence");
 }
 
 async function createAndPersistData(
