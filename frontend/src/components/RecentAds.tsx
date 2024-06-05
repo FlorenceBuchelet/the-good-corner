@@ -1,5 +1,6 @@
 import AdCard, { AdCardProp } from "./AdCard";
 import { useEffect, useState } from "react";
+import 'dotenv/config';
 import axios from "axios";
 
 
@@ -10,12 +11,13 @@ function RecentAds() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await fetch("http://localhost:4000/ads/all");
+                const result = await fetch(`http://localhost:4000/ads`);
                 const fetchedData: AdCardProp[] = await result.json();
+                console.log("fetched 1", fetchedData);
+                
                 setFetched(fetchedData);
-
-            //    const { data } = await axios.get<AdCardProp[]>("http://localhost:4000/ads");
-            //    console.log("axios", data); 
+                //    const { data } /*  */= await axios.get<AdCardProp[]>("http://localhost:4000/ads");
+                //    console.log("axios", data); 
             } catch (err) {
                 console.error("Error during data fetching:", err);
             }

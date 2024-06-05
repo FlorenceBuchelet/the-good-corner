@@ -37,7 +37,7 @@ h1 {
     color: #666;
     padding: 16px 10px 6px;
     white-space: nowrap;
-    overflow-x: scroll;
+    /*     overflow-x: scroll; */
 }
 
 .category-navigation-link {

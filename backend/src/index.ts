@@ -19,6 +19,7 @@ export const dataSource = new DataSource({
     database: `${__dirname}../../database/good_corner.sqlite`,
     entities: [`${__dirname}/entities/*.ts`],
     synchronize: true,
+    logging: true
 });
 
 
@@ -33,14 +34,9 @@ app.get("/", (req, res) => {
 // ADS
 
 // GET all ads (number and content) or per city
-app.get("/ads/all", async (req, res) => {
-    // all ads
-    if (!req.query.city && !req.query.category) {
-        const ads: Ad[] = await dataSource.manager.find(Ad);
-        res.send(ads);
-        console.log(`I have ${ads.length} ads.`);
-        // all ads per city
-    } else if (req.query.city) {
+app.get("/ads", async (req, res) => {
+    // all ads per city
+    if (req.query.city) {
         const city = req.query.city as string | undefined;
         const ads: Ad[] = await dataSource.manager.find(Ad, {
             where: {
@@ -49,23 +45,41 @@ app.get("/ads/all", async (req, res) => {
         })
         res.send(ads);
         console.log(`I have ${ads.length} ads for ${city}.`);
-    } /* else if (req.query.category) {
-        const category = req.query.category as string | undefined;
+        // all ads per category
+    } else if (req.query.category) {
+        console.log("cat query", req.query.category);
+        
+        let category: number | undefined;
+        if (typeof req.query.category === 'string') {
+            category = parseInt(req.query.category, 10);
+        }
         const ads: Ad[] = await dataSource.manager.find(Ad, {
             relations: {
-                category: true
+                category: true,
             },
             where: {
-                category
+                category: {
+                    id: category
+                }
             }
         })
         res.send(ads);
         console.log(`GET ads requested: ${ads.length} ads in ${req.query.category}`);
-    } */
+        // all ads
+    } else {
+        const ads: Ad[] = await dataSource.manager.find(Ad);
+        res.send(ads);
+        console.log(`I have ${ads.length} ads.`);
+    } 
 })
 
 // category names
-app.get("/category/all")
+app.get("/categories", async (req, res) => {
+const categories: Category[] = await dataSource.manager.find(Category);
+    res.send(categories);
+    console.log(`There are ${categories.length} categories`);
+    
+})
 
 
 // one or more categories
@@ -198,7 +212,7 @@ async function initData() {
     await dataSource.manager.save(cat3);
 
     // Bordeaux
-        await createAndPersistData("Annonce Bordeaux 1", "Description de l'annonce Bordeaux 1", "Auteur 1", 1.0, new Date(), "https://placebear.com/200/351.jpg", "Bordeaux", cat3, tag, tag3),
+    await createAndPersistData("Annonce Bordeaux 1", "Description de l'annonce Bordeaux 1", "Auteur 1", 1.0, new Date(), "https://placebear.com/200/351.jpg", "Bordeaux", cat3, tag, tag3),
         await createAndPersistData("Annonce Bordeaux 2", "Description de l'annonce Bordeaux 2", "Auteur 2", 15.0, new Date(), "https://placebear.com/200/352.jpg", "Bordeaux", cat, tag),
         await createAndPersistData("Annonce Bordeaux 3", "Description de l'annonce Bordeaux 3", "Auteur 3", 2.0, new Date(), "https://placebear.com/200/353.jpg", "Bordeaux", cat2, tag, tag2),
         await createAndPersistData("Annonce Bordeaux 4", "Description de l'annonce Bordeaux 4", "Auteur 4", 25.0, new Date(), "https://placebear.com/200/354.jpg", "Bordeaux", cat3, tag, tag3),

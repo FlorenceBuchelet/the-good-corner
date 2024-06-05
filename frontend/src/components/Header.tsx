@@ -1,24 +1,26 @@
-function Header() {
-    type category = {
-        title: string;
-        link: string;
-    }
+import { useState, useEffect } from 'react';
+import 'dotenv/config';
 
-    const categories: category[] = [
-        { title: "Ameublement", link: "/" },
-        { title: "Électroménager", link: "/" },
-        { title: "Photographie", link: "/" },
-        { title: "Informatique", link: "/" },
-        { title: "Téléphonie", link: "/" },
-        { title: "Vélos", link: "/" },
-        { title: "Véhicules", link: "/" },
-        { title: "Sport", link: "/" },
-        { title: "Habillement", link: "/" },
-        { title: "Bébé", link: "/" },
-        { title: "Outillage", link: "/" },
-        { title: "Services", link: "/" },
-        { title: "Vacances", link: "/" }
-    ]
+type Category = {
+    id: number;
+    name: string;
+}
+
+function Header() {
+    const [categories, setCategories] = useState<Category[]>([])
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const result = await fetch(`http://localhost:4000/categories`);
+                const data: Category[] = await result.json();
+                setCategories(data);
+            } catch (err) {
+                console.error("Error in categories fetching: ", err);
+            }
+        }
+        fetchCategories();
+    }, []);
 
     return (
         <header className="header">
@@ -55,11 +57,11 @@ function Header() {
                 </a>
             </div>
             <nav className="categories-navigation">
-                {categories.map((cat, index) => (
+                {categories.map((cat) => (
                     <span
-                        key={cat.title}>
-                        <a href={cat.link} className="category-navigation-link">
-                            {cat.title}
+                        key={cat.id}>
+                        <a href={`/category/${cat.id}`} className="category-navigation-link">
+                            {cat.name}
                         </a>
                         <span> •</span>
                     </span>

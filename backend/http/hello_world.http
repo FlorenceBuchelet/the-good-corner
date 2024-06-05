@@ -10,7 +10,15 @@ GET http://localhost:4000/ads?city=Bordeaux
 
 ### Get all ads for a specific category
 
-GET http://localhost:4000/ads?category=voiture
+GET http://localhost:4000/ads?category=2
+
+### All categories
+
+GET http://localhost:4000/categories
+
+
+
+
 
 ### Filter multiple categories
 
