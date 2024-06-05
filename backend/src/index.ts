@@ -5,7 +5,6 @@ import { DataSource } from "typeorm";
 import { Ad } from "./entities/Ad";
 import { Category } from "./entities/Category";
 import { Tag } from "./entities/Tag";
-import { Cyril } from "./entities/Cyril";
 
 const app = express();
 const port = 4000;
@@ -34,7 +33,7 @@ app.get("/", (req, res) => {
 // ADS
 
 // GET all ads (number and content) or per city
-app.get("/ads", async (req, res) => {
+app.get("/ads/all", async (req, res) => {
     // all ads
     if (!req.query.city && !req.query.category) {
         const ads: Ad[] = await dataSource.manager.find(Ad);
@@ -64,6 +63,9 @@ app.get("/ads", async (req, res) => {
         console.log(`GET ads requested: ${ads.length} ads in ${req.query.category}`);
     } */
 })
+
+// category names
+app.get("/category/all")
 
 
 // one or more categories
@@ -162,7 +164,6 @@ async function cleanDB() {
     await dataSource.manager.clear(Ad);
     await dataSource.manager.clear(Category);
     await dataSource.manager.clear(Tag);
-    await dataSource.manager.clear(Cyril);
     await dataSource.query("DELETE FROM sqlite_sequence");
 }
 

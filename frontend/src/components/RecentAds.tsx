@@ -4,18 +4,18 @@ import axios from "axios";
 
 
 function RecentAds() {
-    const [total, setTotal] = useState(0);
+    const [total, setTotal] = useState<number>(0);
     const [fetched, setFetched] = useState<AdCardProp[]>([])
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                /* const axData = await axios.get("http://localhost:4000/ads");
-                console.log("axios", axData);  */
-                const result = await fetch("http://localhost:4000/ads");
-                const fetchedData = await result.json();
+                const result = await fetch("http://localhost:4000/ads/all");
+                const fetchedData: AdCardProp[] = await result.json();
                 setFetched(fetchedData);
-                console.log("fetch", fetchedData);
+
+            //    const { data } = await axios.get<AdCardProp[]>("http://localhost:4000/ads");
+            //    console.log("axios", data); 
             } catch (err) {
                 console.error("Error during data fetching:", err);
             }
