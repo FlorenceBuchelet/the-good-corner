@@ -82,25 +82,6 @@ const categories: Category[] = await dataSource.manager.find(Category);
 })
 
 
-// one or more categories
-/* app.get("/ads/category", (req, res) => {
-    const initialQuery = `SELECT * FROM ad 
-                            JOIN category ON category.id = ad.category_id
-                            WHERE `;
-    let bodyQuery = `category.title = '${req.body[0]}'`;
-    if (req.body.length > 0) {
-        for (let i = 1; i < req.body.length; i++) {
-            bodyQuery = bodyQuery + ` OR category.title = '${req.body[i]}'`
-        }
-    } else {
-        bodyQuery = `category.title = '${req.body[0]}`
-    };
-    const preparedQuery = initialQuery + bodyQuery + ";";
-    db.all(preparedQuery, (err, rows) => {
-        res.send(rows);
-        console.log('GET ads requested: ', rows.length, ' ads returned');
-    })
-}); */
 
 // average category (TODO: add param)
 /* app.get("/ads/category/average", (req, res) => {
@@ -127,6 +108,22 @@ const categories: Category[] = await dataSource.manager.find(Category);
 }); */
 
 // add an ad
+
+app.post("/ads", async (req, res) => {
+    const nAd = req.body;
+    console.log("nad", nAd);
+    
+    try {
+        const ad = new Ad(nAd.title, nAd.description, nAd.author, nAd.price, nAd.createdAt, nAd.picture, nAd.city);
+        ad.category = nAd.category;
+        console.log("ad", ad);
+        
+
+        } catch (err) {
+        console.error('create ad failed', err);
+        res.status(500).send('unexpected error')
+    }
+})
 /* app.post("/ads", (req, res) => {
     for (let i = 0; i < ads.length; i++) {
         if (req.body.title === ads[i].title) {

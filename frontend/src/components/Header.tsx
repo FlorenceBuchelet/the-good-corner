@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import 'dotenv/config';
 
-type Category = {
+export type Category = {
     id: number;
     name: string;
 }
