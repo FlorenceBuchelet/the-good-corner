@@ -16,8 +16,13 @@ GET http://localhost:4000/ads?category=2
 
 GET http://localhost:4000/categories
 
+### Delete an ad
 
+DELETE http://localhost:4000/ads/3
 
+### Add a star
+
+PUT http://localhost:4000/ads/1/star
 
 
 ### Filter multiple categories
@@ -41,9 +46,6 @@ Content-Type: application/json
 {
     "letter": "2"
 }
-### Delete by price
-
-DELETE http://localhost:4000/ads/value?price=15
 
 ### Add an ad
 POST http://localhost:4000/ads

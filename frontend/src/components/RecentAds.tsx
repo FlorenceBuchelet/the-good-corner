@@ -13,8 +13,6 @@ function RecentAds() {
             try {
                 const result = await fetch(`http://localhost:4000/ads`);
                 const fetchedData: AdCardProp[] = await result.json();
-                console.log("fetched 1", fetchedData);
-                
                 setFetched(fetchedData);
                 //    const { data } /*  */= await axios.get<AdCardProp[]>("http://localhost:4000/ads");
                 //    console.log("axios", data); 
@@ -27,12 +25,12 @@ function RecentAds() {
 
     return (
         <>
-            <h2>Annonces récentes</h2>
-            <p>Prix total : {total} €</p>
+            <h2>Cute babies</h2>
+            <p>Total of stars earned : {total} ⭐</p>
             <section className="recent-ads">
                 {fetched.map((ad) => (
                     <article
-                        key={ad.title}
+                        key={ad.id}
                     >
                         <AdCard
                             picture={ad.picture}
@@ -44,7 +42,7 @@ function RecentAds() {
                             className="button"
                             onClick={() => setTotal(total + ad.price)}
                         >
-                            Add price to total
+                            Add stars to total
                         </button>
                     </article>
                 ))}
