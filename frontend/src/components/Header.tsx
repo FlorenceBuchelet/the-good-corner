@@ -1,13 +1,22 @@
 import { useState, useEffect } from 'react';
 import 'dotenv/config';
+import axios from 'axios';
+import { AdCardProp } from "@/components/AdCard";
+
 
 export type Category = {
     id: number;
     name: string;
 }
 
+interface Prompt {
+    prompt: string;
+}
+
 function Header() {
-    const [categories, setCategories] = useState<Category[]>([])
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [ads, setAds] = useState<AdCardProp[]>([]);
+    const [prompt, setPrompt] = useState("");
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -22,18 +31,38 @@ function Header() {
         fetchCategories();
     }, []);
 
+    const fetchName = async () => {
+        try {
+            const { data } = await axios.get<AdCardProp[]>(`http://localhost:4000/search?prompt=${prompt}`)
+            setAds(data);
+        } catch (err) {
+            console.error("Error in search: ", err);
+        }
+        console.log("ads", ads);
+    }
+
+    useEffect(() => {
+        setTimeout(() => fetchName(), 400)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [prompt]);
+
+    const handleClick = (e: React.SyntheticEvent) => {
+        e.preventDefault();
+        fetchName();
+    }
+
     return (
         <header className="header">
             <div className="main-menu">
                 <h1>
                     <a href="/" className="button logo link-button">
-                        <span className="mobile-short-label">TGC</span>
-                        <span className="desktop-long-label">THE GOOD CORNER</span>
+                        <span className="mobile-short-label">TGBC</span>
+                        <span className="desktop-long-label">THE GOOD BOYS CORNER</span>
                     </a>
                 </h1>
                 <form className="text-field-with-button">
-                    <input className="text-field main-search-field" type="search" />
-                    <button className="button button-primary">
+                    <input className="text-field main-search-field" type="search" onChange={(e: React.SyntheticEvent) => setPrompt(e.target.value)} />
+                    <button onClick={handleClick} className="button button-primary">
                         <svg
                             aria-hidden="true"
                             width="16"
@@ -53,7 +82,7 @@ function Header() {
                 </form>
                 <a href="/submit" className="button link-button"
                 ><span className="mobile-short-label">Publier</span>
-                    <span className="desktop-long-label">Publier une annonce</span>
+                    <span className="desktop-long-label">Submit a new star</span>
                 </a>
             </div>
             <nav className="categories-navigation">

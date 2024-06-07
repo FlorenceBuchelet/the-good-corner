@@ -14,7 +14,7 @@ function RecentAds() {
                 const result = await fetch(`http://localhost:4000/ads`);
                 const fetchedData: AdCardProp[] = await result.json();
                 setFetched(fetchedData);
-                //    const { data } /*  */= await axios.get<AdCardProp[]>("http://localhost:4000/ads");
+                //    const { data } = await axios.get<AdCardProp[]>("http://localhost:4000/ads");
                 //    console.log("axios", data); 
             } catch (err) {
                 console.error("Error during data fetching:", err);
