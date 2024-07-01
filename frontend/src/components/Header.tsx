@@ -61,8 +61,14 @@ function Header() {
                     </a>
                 </h1>
                 <form className="text-field-with-button">
-                    <input className="text-field main-search-field" type="search" onChange={(e: React.SyntheticEvent) => setPrompt(e.target.value)} />
+                    <input className="text-field main-search-field" type="search" list='names' onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPrompt(e.target.value)} />
+                    <datalist id='names'>
+                    {ads && ads.map((ad) => (
+                        <option key={ad.id} value={ad.title}>chaussette</option>
+                    ))}
+                </datalist>
                     <button onClick={handleClick} className="button button-primary">
+                        
                         <svg
                             aria-hidden="true"
                             width="16"
