@@ -6,6 +6,12 @@ import { Ad } from "./entities/Ad";
 import { Category } from "./entities/Category";
 import { Tag } from "./entities/Tag";
 
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { typeDefs } from "./graphQL/schema";
+import { resolvers } from "./graphQL/resolvers";
+
+
 const app = express();
 const port = 4000;
 
@@ -22,6 +28,11 @@ export const dataSource = new DataSource({
     // logging: true
 });
 
+// Apollo setup
+const server = new ApolloServer({
+    typeDefs,
+    resolvers
+})
 
 // //////////////////////////////////////////////
 // Router 
@@ -289,9 +300,14 @@ async function initData() {
         await createAndPersistData("Anaëlle", "Description de l'annonce Lyon 20", "Auteur 60", 305.0, new Date(), "https://placebear.com/200/360.jpg", "Lyon", cat, tag);
 }
 
-app.listen(port, async () => {
+/* app.listen(port, async () => {
     await dataSource.initialize();
     await cleanDB();
     await initData();
     console.log(`Example app listening on port ${port}`);
+}); */
+
+const { url } = await startStandaloneServer(server, {
+    listen: { port: 4000 },
 });
+console.log(`🚀  Server ready at: ${url}`);
