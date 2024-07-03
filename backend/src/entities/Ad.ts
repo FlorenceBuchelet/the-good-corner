@@ -1,57 +1,81 @@
+import { BaseEntity, BeforeInsert, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, RelationId } from "typeorm";
 import { Category } from "./Category";
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Tag } from "./Tag";
+import { Field, ID, Int, ObjectType } from "type-graphql";
 
+@ObjectType()
 @Entity()
 export class Ad extends BaseEntity {
 
     @PrimaryGeneratedColumn()
-    id!: number;
+    @Field(type => ID)
+    id?: number;
 
     @Column()
+    @Field()
     title: string;
 
     @Column({ nullable: true })
+    @Field()
     description?: string;
 
     @Column()
-    author: string;
+    @Field()
+    owner: string;
 
     @Column({ nullable: true })
+    @Field(type => Int)
     price?: number;
 
     @Column({ nullable: true })
-    createdAt?: Date;
-
-    @Column({ nullable: true })
+    @Field()
     picture?: string;
 
     @Column({ nullable: true })
-    city?: string;
+    @Field()
+    location?: string;
 
-    @ManyToOne(() => Category, category => category.hasId, { eager: true })
+    @Column({ nullable: true })
+    @Field(type => Date)
+    createdAt?: Date;
+
+    @ManyToOne(() => Category, category => category.ads, { eager: true })
+    @Field(type => Category)
     category?: Category;
 
     @ManyToMany(() => Tag, { cascade: true })
     @JoinTable()
+    @Field(type => [Tag])
     tags?: Promise<Tag[]>;
 
+    @RelationId('tags')
+    tagIds?: number[]
+
     constructor(
-        title: string,
-        description: string,
-        author: string,
-        price: number,
-        createdAt: Date,
-        picture: string,
-        city: string,
+        title: string = '',
+        description: string | undefined = undefined,
+        owner: string = '',
+        price?: number,
+        picture?: string,
+        location?: string,
+        createdAt?: Date,
     ) {
         super();
+
         this.title = title;
         this.description = description;
-        this.author = author;
+        this.owner = owner;
         this.price = price;
-        this.createdAt = createdAt;
         this.picture = picture;
-        this.city = city;
+        this.location = location;
+        this.createdAt = createdAt;
+    }
+
+    @BeforeInsert()
+    onBeforeInsert() {
+        console.log("before insert ad - " + this.title)
+        if (!this.createdAt) {
+            this.createdAt = new Date();
+        }
     }
 }

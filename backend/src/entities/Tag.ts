@@ -1,17 +1,22 @@
+import { Field, ID, ObjectType } from "type-graphql";
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
+@ObjectType()
 @Entity()
 export class Tag extends BaseEntity {
+
     @PrimaryGeneratedColumn()
+    @Field(type => ID)
     id?: number;
 
     @Column()
-    name?: string;
+    @Field()
+    name: string;
 
     constructor(
         name: string = '',
     ) {
-        super()
+        super();
         this.name = name;
     }
 }
