@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import 'dotenv/config';
 import axios from 'axios';
 import { AdCardProp } from "@/components/AdCard";
+import { useQuery } from '@apollo/client';
+import { GET_ALL_CATEGORIES } from '@/graphQL/categories';
 
 
 export type Category = {
@@ -14,43 +16,13 @@ interface Prompt {
 }
 
 function Header() {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [ads, setAds] = useState<AdCardProp[]>([]);
     const [prompt, setPrompt] = useState("");
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const result = await fetch(`http://localhost:4000/categories`);
-                const data: Category[] = await result.json();
-                setCategories(data);
-            } catch (err) {
-                console.error("Error in categories fetching: ", err);
-            }
-        }
-        fetchCategories();
-    }, []);
-
-    const fetchName = async () => {
-        try {
-            const { data } = await axios.get<AdCardProp[]>(`http://localhost:4000/search?prompt=${prompt}`)
-            setAds(data);
-        } catch (err) {
-            console.error("Error in search: ", err);
-        }
-        console.log("ads", ads);
-    }
-
-    useEffect(() => {
-        setTimeout(() => fetchName(), 400)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [prompt]);
-
-    const handleClick = (e: React.SyntheticEvent) => {
-        e.preventDefault();
-        fetchName();
-    }
-
+    const { data, loading, error } = useQuery(GET_ALL_CATEGORIES);
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Damn! An error: {error.message}</p>;
+    console.log("retour de apollo client pour category", data);
+    
     return (
         <header className="header">
             <div className="main-menu">
@@ -62,13 +34,13 @@ function Header() {
                 </h1>
                 <form className="text-field-with-button">
                     <input className="text-field main-search-field" type="search" list='names' onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPrompt(e.target.value)} />
-                    <datalist id='names'>
-                    {ads && ads.map((ad) => (
-                        <option key={ad.id} value={ad.title}>chaussette</option>
-                    ))}
-                </datalist>
-                    <button onClick={handleClick} className="button button-primary">
-                        
+{/*                     <datalist id='names'>
+                        {ads && ads.map((ad) => (
+                            <option key={ad.id} value={ad.title}>chaussette</option>
+                        ))}
+                    </datalist>
+ */}                    <button className="button button-primary">
+
                         <svg
                             aria-hidden="true"
                             width="16"
@@ -92,7 +64,7 @@ function Header() {
                 </a>
             </div>
             <nav className="categories-navigation">
-                {categories.map((cat) => (
+                {data.getAllCategories.map((cat: Category) => (
                     <span
                         key={cat.id}>
                         <a href={`/category/${cat.id}`} className="category-navigation-link">

@@ -22,7 +22,8 @@ export class AdResolver {
         return tagsDataLoader.loadMany(ad.tagIds);
     }
 
-    @Query(type => [Ad]) // remplace la définition de endpoint
+    // remplace la définition de endpoint
+    @Query(type => [Ad]) 
     async getAllAds(): Promise<Ad[]> { // la fonction retourne toutes les Ads
         console.log("getAllAds Query called from graphql")
         const ads: Ad[] = await Ad.find({});

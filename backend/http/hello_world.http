@@ -7,7 +7,7 @@ POST http://localhost:4000/
 Content-Type: application/json
 
 {
-    "query": "query QueryAllAds { getAllAds { title description } }"
+    "query": "query QueryAllCategories { getAllCategories { name } }"
 }
 
 ### Get all ads

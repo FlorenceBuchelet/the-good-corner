@@ -13,7 +13,7 @@ function RecentAds() {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
-    console.log('Retour de apollo client suite à la requête GraphQL ' , data);
+    console.log('Retour de apollo client pour ads ' , data);
 
     return (
         <>

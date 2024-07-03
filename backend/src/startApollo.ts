@@ -7,6 +7,7 @@ import { buildSchema } from "type-graphql";
 import { dataSource } from "./dataSource/dataSource";
 import { cleanDB } from "./dataSource/cleanDB";
 import { initTestData } from "./dataSource/initTestData";
+import { CategoriesResolver } from "./graphQL-resolvers/CategoryResolver";
 
 const port = 4000;
 
@@ -16,7 +17,7 @@ export async function startServerApollo() {
 
     // 1. construction du schema à partir des resolvers
     const schema = await buildSchema({
-        resolvers: [AdResolver],
+        resolvers: [AdResolver, CategoriesResolver],
     });
     
     // 2. transmettre le schema à Apollo pour démarrage du serveur
