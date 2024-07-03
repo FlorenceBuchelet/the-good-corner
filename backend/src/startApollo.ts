@@ -8,7 +8,6 @@ import { dataSource } from "./dataSource/dataSource";
 import { cleanDB } from "./dataSource/cleanDB";
 import { initTestData } from "./dataSource/initTestData";
 
-
 const port = 4000;
 
 // ------------- DATASOURCE 

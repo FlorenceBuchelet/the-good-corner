@@ -4,15 +4,15 @@ import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
-const client = new ApolloClient({
-  uri: 'https://spacex-production.up.railway.app/', // TODO: Changer l'endpoint
-  cache: new InMemoryCache()
+const apolloClient = new ApolloClient({
+  uri: 'http://localhost:4000',
+  cache: new InMemoryCache(),
 });
 
 
 function App({ Component, pageProps }: AppProps) {
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apolloClient}>
       <Layout>
         <Component {...pageProps} />
       </Layout>

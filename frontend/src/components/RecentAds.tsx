@@ -1,34 +1,26 @@
 import AdCard, { AdCardProp } from "./AdCard";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import 'dotenv/config';
-import axios from "axios";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_ADS_QUERY } from "@/graphQL/ads";
 
 
 function RecentAds() {
     const [total, setTotal] = useState<number>(0);
-    const [fetched, setFetched] = useState<AdCardProp[]>([])
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await fetch(`http://localhost:4000/ads`);
-                const fetchedData: AdCardProp[] = await result.json();
-                setFetched(fetchedData);
-                //    const { data } = await axios.get<AdCardProp[]>("http://localhost:4000/ads");
-                //    console.log("axios", data); 
-            } catch (err) {
-                console.error("Error during data fetching:", err);
-            }
-        }
-        fetchData();
-    }, []);
+    const { data, loading, error } = useQuery(GET_ALL_ADS_QUERY);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+
+    console.log('Retour de apollo client suite à la requête GraphQL ' , data);
 
     return (
         <>
             <h2>Cute babies</h2>
             <p>Total of stars earned : {total} ⭐</p>
             <section className="recent-ads">
-                {fetched.map((ad) => (
+                {data.getAllAds.map((ad: AdCardProp) => (
                     <article
                         key={ad.id}
                     >
