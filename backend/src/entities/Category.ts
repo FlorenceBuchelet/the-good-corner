@@ -21,6 +21,7 @@ export class Category extends BaseEntity {
     constructor(
         name: string = '',
     ) {
+        super();
         this.name = name;
     }
 }
