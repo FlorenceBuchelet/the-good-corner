@@ -10,7 +10,7 @@ import { Tag } from "../entities/Tag";
 export class AdMutations {
     @Mutation(type => Ad)
     async publishAd(
-        @Arg('title') title: string,
+        @Arg("title") title: string,
         @Arg("description", { nullable: true }) description: string,
         @Arg("owner") owner: string,
         @Arg("price", { nullable: true }) price: number,
