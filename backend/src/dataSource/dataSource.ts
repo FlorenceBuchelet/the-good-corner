@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 export const dataSource = new DataSource({
     // paramètres liés à la BDD
     type: 'postgres',
-    host: 'localhost',
+    host: 'db',
     port: 5432,
     database: 'the_good_corner',
     username: "postgres",
