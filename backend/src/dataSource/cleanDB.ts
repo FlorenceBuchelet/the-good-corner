@@ -7,5 +7,5 @@ export async function cleanDB() {
     await dataSource.manager.clear(Ad);
     await dataSource.manager.clear(Category);
     await dataSource.manager.clear(Tag);
-    await dataSource.query("DELETE FROM sqlite_sequence");
+    // await dataSource.query("DELETE FROM sqlite_sequence");
 }

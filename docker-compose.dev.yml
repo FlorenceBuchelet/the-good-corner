@@ -1,6 +1,15 @@
 # clef de haut niveau (qui crée un conteneur)
-# Les conteneurs sont automatiquement liés 
 services:
+
+  back:
+    build: ./backend
+    restart: unless-stopped
+    ports:
+      - 4000:4000
+    volumes:
+      - ./backend:/app
+    environment:
+      TGC_DBPASS: example
 
 # sous clef pour créer service/conteneur db
   db:
@@ -10,7 +19,9 @@ services:
     # set shared memory limit when using docker-compose
     shm_size: 128mb
     # or set shared memory limit when deploy via swarm stack
-    #volumes:
+    volumes:
+    # :Dossier de données propre à postgres
+      - /c/Users/ce pc/quests/ALTERNANCE/the-good-corner-db-data:/var/lib/postgresql/data
     #  - type: tmpfs
     #    target: /dev/shm
     #    tmpfs:
@@ -18,10 +29,14 @@ services:
     environment:
     # technique de configuration imposée par postgres
       POSTGRES_PASSWORD: example
+    # exposer un port pour rendre le conteneur accessible
+    ports:
+      - 5432:5432
+    # ajouter les volumes ici pour assurer la persistance des données 
 
 # service pour parcourir en mode web une base de données 
   adminer:
     image: adminer
-    restart: always
+    restart: unless-stopped
     ports:
       - 8080:8080
