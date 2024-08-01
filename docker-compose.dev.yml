@@ -9,7 +9,7 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      TGC_DBPASS: example
+      TGC_DBPASS: ${DBPASS}
 
   front:
     build: ./frontend
