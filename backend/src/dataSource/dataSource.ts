@@ -6,8 +6,8 @@ export const dataSource = new DataSource({
     host: 'db',
     port: 5432,
     database: 'the_good_corner',
-    username: "postgres",
-    password: "example",
+    username: "the_good_corner_user",
+    password: process.env.TGC_DBPASS,
 
     // paramètres liés à typeORM
     entities: ['src/entities/*.ts'], 
