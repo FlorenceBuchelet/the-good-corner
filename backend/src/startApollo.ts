@@ -29,7 +29,7 @@ export async function startServerApollo() {
     await dataSource.initialize();
     // 3bis. appel des autres services d'initialisation
     // await cleanDB();
-    await initTestData();
+    // await initTestData();
 
     // 4. démarrage du serveur
     const { url } = await startStandaloneServer(server, {

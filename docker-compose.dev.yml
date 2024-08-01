@@ -11,6 +11,14 @@ services:
     environment:
       TGC_DBPASS: example
 
+  front:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/webapp
+
 # sous clef pour créer service/conteneur db
   db:
     image: postgres:16
@@ -32,7 +40,6 @@ services:
     # exposer un port pour rendre le conteneur accessible
     ports:
       - 5432:5432
-    # ajouter les volumes ici pour assurer la persistance des données 
 
 # service pour parcourir en mode web une base de données 
   adminer:
