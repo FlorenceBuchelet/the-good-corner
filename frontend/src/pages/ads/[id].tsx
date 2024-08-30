@@ -1,30 +1,27 @@
 import AdCard, { AdCardProp } from "@/components/AdCard";
+import { GET_AD_BY_ID } from "@/graphQL/ads";
+import { useQuery } from "@apollo/client";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function AdId() {
-    const [ad, setAd] = useState<AdCardProp>();
     const [message, setMessage] = useState<string>("");
     const [total, setTotal] = useState<number>(0);
     const router = useRouter();
-    const { id } = router.query;
+    const id = parseFloat(router.query.id as string)
 
-    useEffect(() => {
-        if (id) {
-            const fetchAd = async () => {
-                try {
-                    const { data } = await axios.get<AdCardProp>(`http://localhost:4000/ads/${id}`)
-                    setAd(data);
-                    setTotal(data.price);
-                } catch (err) {
-                    console.error('Error fetching data:', err);
-                }
-            }
-            fetchAd();
-        }
-        }, [id]);
-        
+    const { data, loading, error } = useQuery(GET_AD_BY_ID, {
+        variables: { getAdByIdId: id }
+    });
+    console.log('👉👉 data', data);
+    
+    
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+    
+    const ad = data.getAdById;
+
     const handleGood = () => {
         if (ad) {
             const deleteAd = async () => {

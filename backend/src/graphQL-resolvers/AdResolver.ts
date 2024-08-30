@@ -5,15 +5,14 @@ import { Tag } from "../entities/Tag";
 import { In } from "typeorm";
 import { Category } from "../entities/Category";
 
-
+// TODO: Comprendre comment ça marche v
 const tagsDataLoader = new DataLoader((ids) => {
     return Tag.findBy({
         id: In(ids)
     });
 });
 
-// Classe Typescript décorée
-@Resolver(Ad) // Définir ce que résoud ce resolver
+@Resolver(Ad)
 export class AdResolver {
 
     @FieldResolver()
@@ -24,12 +23,16 @@ export class AdResolver {
         return tagsDataLoader.loadMany(ad.tagIds);
     }
 
-    // remplace la définition de endpoint
     @Query(type => [Ad]) 
     async getAllAds(): Promise<Ad[]> { // la fonction retourne toutes les Ads
-        console.log("getAllAds Query called from graphql")
         const ads: Ad[] = await Ad.find({});
         return ads;
+    }
+
+    @Query(_ => Ad, { nullable: true })
+    async getAdById(@Arg("id") id: number): Promise<Ad | null> {
+        const ad: Ad | null = await Ad.findOneBy({ id });
+        return ad;
     }
 
     @Mutation(type => Ad)

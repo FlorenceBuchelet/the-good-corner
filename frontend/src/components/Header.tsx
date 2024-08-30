@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import 'dotenv/config';
 import { AdCardProp } from "@/components/AdCard";
 import { useQuery } from '@apollo/client';

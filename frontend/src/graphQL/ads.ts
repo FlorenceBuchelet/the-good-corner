@@ -12,3 +12,13 @@ query GetAllAds {
 }
 `;
 
+export const GET_AD_BY_ID = gql`
+query GetAdById($getAdByIdId: Float!) {
+    getAdById(id: $getAdByIdId) {
+        id
+        title
+        description
+        price
+        picture
+    }
+}`
