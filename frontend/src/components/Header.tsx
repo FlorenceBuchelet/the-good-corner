@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import 'dotenv/config';
-import axios from 'axios';
 import { AdCardProp } from "@/components/AdCard";
 import { useQuery } from '@apollo/client';
 import { GET_ALL_CATEGORIES } from '@/graphQL/categories';
@@ -21,8 +20,7 @@ function Header() {
     const { data, loading, error } = useQuery(GET_ALL_CATEGORIES);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Damn! An error: {error.message}</p>;
-    console.log("retour de apollo client pour category in header", data);
-    
+
     return (
         <header className="header">
             <div className="main-menu">
