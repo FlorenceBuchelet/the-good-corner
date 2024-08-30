@@ -8,3 +8,20 @@ query GetAllCategories {
     }
 }
 `
+
+export const GET_ONE_CATEGORY = gql`
+query GetCategoryById($getCategoryByIdId: Float!) {
+    getCategoryById(id: $getCategoryByIdId) {
+        id
+        name
+        ads {
+            title
+            price
+        picture
+        owner
+        location
+        id
+        description
+        }
+    }
+}`
