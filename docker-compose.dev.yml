@@ -10,6 +10,7 @@ services:
       - ./backend:/app
     environment:
       TGC_DBPASS: ${DBPASS}
+      JWT_SECRET: ${JWT_SECRET}
 
   front:
     build: ./frontend
@@ -29,8 +30,8 @@ services:
     # or set shared memory limit when deploy via swarm stack
     volumes:
     # :Dossier de données propre à postgres
-    #  - /c/Users/ce pc/quests/ALTERNANCE/the-good-corner-db-data:/var/lib/postgresql/data
-      - ./the-good-corner-db-data:/var/lib/postgresql/data
+      - /c/Users/ce pc/quests/ALTERNANCE/the-good-corner-db-data:/var/lib/postgresql/data
+    #  - ./the-good-corner-db-data:/var/lib/postgresql/data
     #  - type: tmpfs
     #    target: /dev/shm
     #    tmpfs:

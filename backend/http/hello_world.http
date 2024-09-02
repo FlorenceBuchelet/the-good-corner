@@ -2,12 +2,24 @@ GET http://localhost:4000/
 
 ### Apollo queries
 ### Get all ads
-
 POST http://localhost:4000/ 
 Content-Type: application/json
 
 {
     "query": "query QueryAllCategories { getAllCategories { name } }"
+}
+
+### Create user
+POST http://localhost:4000/ 
+Content-Type: application/json
+
+{
+    "query": "mutation CreateUser($email: String!, $password: String!, $role: String!) { createUser { email: $email password: $password role: $role } }",
+    "variables": {
+        "email": "florence.buchelet@gmail.com",
+        "password": "example",
+        "role": "USER"
+        }
 }
 
 ### Get all ads

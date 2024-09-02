@@ -12,7 +12,7 @@ DBPASS_ADMIN=the_good_corner_user DBPASS=example docker compose -f docker-compos
 
 **not detached** : 
 ```sh
-DBPASS_ADMIN=the_good_corner_user DBPASS=example docker compose -f docker-compose.dev.yml up --build --force-recreate
+DBPASS_ADMIN=the_good_corner_user DBPASS=example JWT_SECRET=superSecuredKey___ docker compose -f docker-compose.dev.yml up --build --force-recreate
 ```
 
 Lors de l'initialisation, créer un user dans PostgreSQL : 

@@ -1,4 +1,4 @@
-import { FieldResolver, Query, Resolver, Root, Arg, Int, Mutation } from "type-graphql";
+import { FieldResolver, Query, Resolver, Root, Arg, Int, Mutation, Authorized } from "type-graphql";
 import { Ad } from "../entities/Ad";
 import DataLoader from "dataloader";
 import { Tag } from "../entities/Tag";
@@ -23,6 +23,7 @@ export class AdResolver {
         return tagsDataLoader.loadMany(ad.tagIds);
     }
 
+    @Authorized("ADMIN", "USER")
     @Query(type => [Ad]) 
     async getAllAds(): Promise<Ad[]> { // la fonction retourne toutes les Ads
         const ads: Ad[] = await Ad.find({});
