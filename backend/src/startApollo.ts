@@ -41,10 +41,6 @@ export async function startServerApollo() {
     // await cleanDB();
     // await initTestData();
 
-    // Une fonction de contexte qui récupère les requêtes
-
-    // Vérifier que les verifs sont bien là
-
     // 4. démarrage du serveur et transmission du JWT
     const { url } = await startStandaloneServer(server, {
         listen: { port },

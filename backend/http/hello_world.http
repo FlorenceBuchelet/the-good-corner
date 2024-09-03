@@ -24,6 +24,18 @@ Content-Type: application/json
         }
 }
 
+### Login and JWT
+POST http://localhost:4000/
+Content-Type: application/json
+
+{
+    "query": "query LoginUser($email: String!, $password: String!) { login(email: $email, password: $password) }",
+    "variables": {
+        "email": "yetanotheruser@user.user",
+        "password": "example"
+    }
+}
+
 ### Get all ads
 
 GET http://localhost:4000/ads

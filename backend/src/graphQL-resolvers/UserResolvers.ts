@@ -1,7 +1,7 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { User } from "../entities/User";
-import * as argon2 from 'argon2';
-import jwt, { Secret } from 'jsonwebtoken';
+import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
 
 @Resolver(User)
 export class UserResolver {
@@ -13,12 +13,8 @@ export class UserResolver {
         @Arg("password") password: string,
     ): Promise<User> {
         const hashedPassword: string = await argon2.hash(password);
-        console.log("hashedpassword in user resolver createuser", password, hashedPassword);
-        
         const user = new User(email, role, hashedPassword);
         await user.save()
-        console.log("user in createuser", user);
-        
         return user;
     }
 
@@ -36,35 +32,35 @@ export class UserResolver {
         return users;
     }
 
-    /*     @Query(_ => String)
-        async login(
-            @Arg("email") email: string,
-            @Arg('password') password: string
-        ): Promise<string> {
-            console.log("user log ", email, password);
-            
-            const isValid: boolean = await argon2.verify(user.passwordHashed, password)
-            if (isValid!) {
-                throw new Error("Argon2 doesn't recognize the password")
+    // Login avec JWT
+    @Query(_ => String)
+    async login(
+        @Arg("email") email: string,
+        @Arg('password') password: string
+    ): Promise<string> {
+        // 1. Retrouver l'utilisateur
+        const user: User = await User.findOneOrFail({
+            where: {
+                email
             }
-            //const hashedPassword: string = await argon2.hash(password);
-    
-            User.findOneOrFail({
-                where: {
-                    email,
-                    // passwordHashed: hashedPassword
-                }
-            });
-    
-            const jwtSecret: string | undefined = process.env.JWT_SECRET;
-            console.log("jwt secret: ", jwtSecret);
-            if (!jwtSecret) {
-                throw new Error('invalid JWT secret');
-            }
-    
-            const token: string = jwt.sign({ email, role: user.role }, jwtSecret);
-            
-            return token;
-        } */
+        });
+
+        // 2. Comparer les passwords
+        const hashedPassword = await argon2.hash(password);
+        const isValid: boolean = await argon2.verify(user.passwordHashed, hashedPassword)
+        if (isValid!) {
+            throw new Error("Argon2 doesn't recognize the password")
+        }
+
+        // 3. Générer le JWT
+        const jwtSecret: string | undefined = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+            throw new Error('invalid JWT secret');
+        }
+
+        const token: string = jwt.sign({ email, role: user.role }, jwtSecret);
+
+        return token;
+    }
 
 }
