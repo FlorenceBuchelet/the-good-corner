@@ -1,7 +1,7 @@
 GET http://localhost:4000/
 
 ### Apollo queries
-### Get all ads
+### Get all cats
 POST http://localhost:4000/ 
 Content-Type: application/json
 

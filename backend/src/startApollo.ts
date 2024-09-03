@@ -44,22 +44,25 @@ export async function startServerApollo() {
     // 4. démarrage du serveur et transmission du JWT
     const { url } = await startStandaloneServer(server, {
         listen: { port },
-/*         context: async ({ req }) => {
-            const authHeader = req.headers.authorization;
+        context: async ({ req }) => {
+            const authHeader: string | undefined = req.headers.authorization;
+            console.log("auth header in start apollo", authHeader);
             let user = null;
             if (authHeader?.startsWith('Bearer') === true) {
+                console.log("authheader starts with Bearer");
+                
                 const tokenValue: string = authHeader.substring('Bearer '.length);
                 if (!process.env.JWT_SECRET) {
+                    console.log("secret is wrong");
+                    
                     throw new Error('invalid JWT secret')
                 }
                 user = jwt.verify(tokenValue, process.env.JWT_SECRET)
                 console.log("jwt verify result ", user);
-                
             }
-
             return { user }
         }
- */    });
+    });
 
     console.log(`🚀  Server ready at: ${url}`);
 }

@@ -60,6 +60,8 @@ export class UserResolver {
 
         const token: string = jwt.sign({ email, role: user.role }, jwtSecret);
 
+        console.log("token jwt in user resolver", token);
+
         return token;
     }
 

@@ -23,9 +23,9 @@ export class AdResolver {
         return tagsDataLoader.loadMany(ad.tagIds);
     }
 
-    // @Authorized("ADMIN", "USER")
+    @Authorized()
     @Query(type => [Ad]) 
-    async getAllAds(): Promise<Ad[]> { // la fonction retourne toutes les Ads
+    async getAllAds(): Promise<Ad[]> {
         const ads: Ad[] = await Ad.find({});
         return ads;
     }
