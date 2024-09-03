@@ -18,7 +18,8 @@ export class User extends BaseEntity {
     role: string;
 
     @Column()
-    // Pas de Field parce qu'il ne peut pas être requêté
+    // FIXME: Pas de Field parce qu'il ne peut pas être requêté
+    @Field()
     passwordHashed: string;
 
     constructor(

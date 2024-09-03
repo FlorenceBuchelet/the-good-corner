@@ -48,7 +48,7 @@ export async function startServerApollo() {
     // 4. démarrage du serveur et transmission du JWT
     const { url } = await startStandaloneServer(server, {
         listen: { port },
-        context: async ({ req }) => {
+/*         context: async ({ req }) => {
             const authHeader = req.headers.authorization;
             let user = null;
             if (authHeader?.startsWith('Bearer') === true) {
@@ -63,7 +63,7 @@ export async function startServerApollo() {
 
             return { user }
         }
-    });
+ */    });
 
     console.log(`🚀  Server ready at: ${url}`);
 }
