@@ -1,11 +1,26 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { AUTH_TOKEN_LOCAL_STORAGE_KEY } from '@/pages/login';
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { setContext } from "@apollo/client/link/context";
+
+const httpLink = createHttpLink({
+    uri: 'http://localhost:4000/'
+});
+
+const authHeaderLink = setContext(( request, { headers }) => {
+    const token: string | null = localStorage.getItem(AUTH_TOKEN_LOCAL_STORAGE_KEY);
+
+    return {
+        headers: {
+            ...headers,
+            'content-type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}) 
+        }
+    };
+});
 
 const apolloClient = new ApolloClient({
-    uri: 'http://localhost:4000/',
-    cache: new InMemoryCache(),
-    headers: {
-        'content-type': 'application/json',
-    }
+    link: authHeaderLink.concat(httpLink),
+    cache: new InMemoryCache()
 });
 
 export default apolloClient;
