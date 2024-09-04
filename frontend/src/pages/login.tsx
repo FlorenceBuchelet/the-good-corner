@@ -7,6 +7,8 @@ interface LoginFormData {
     password: string,
 }
 
+export const AUTH_TOKEN_LOCAL_STORAGE_KEY = 'authToken';
+
 function Login() {
     const { handleSubmit, register } = useForm<LoginFormData>();
 
@@ -15,7 +17,7 @@ function Login() {
     const onLoginFormSubmitted = async (formData: LoginFormData) => {
         console.log("Form data in login", formData);
         await login({
-            variables: { 
+            variables: {
                 email: formData.email,
                 password: formData.password
             }
@@ -26,6 +28,10 @@ function Login() {
     if (error) return <p>Error: {error.message}</p>;
 
     console.log("Retour de data du login", data);
+    if (data) {
+        const token: string | undefined = data.login
+        token ? localStorage.setItem(AUTH_TOKEN_LOCAL_STORAGE_KEY, token) : null;
+    };
 
     return (
         <>
