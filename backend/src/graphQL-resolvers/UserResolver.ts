@@ -33,12 +33,14 @@ export class UserResolver {
     }
 
     // Login avec JWT
-    @Query(_ => String)
+    @Mutation(_ => String)
     async login(
         @Arg("email") email: string,
         @Arg('password') password: string
     ): Promise<string> {
         // 1. Retrouver l'utilisateur
+        console.log("login in resolver started");
+        
         const user: User = await User.findOneOrFail({
             where: {
                 email
