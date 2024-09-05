@@ -1,5 +1,7 @@
+import { AUTH_TOKEN_LOCAL_STORAGE_KEY, AuthContext, AuthContextType } from "@/contexts/authContext";
 import { USER_LOGIN } from "@/graphQL/user";
 import { useMutation } from "@apollo/client";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 
 interface LoginFormData {
@@ -7,10 +9,10 @@ interface LoginFormData {
     password: string,
 }
 
-export const AUTH_TOKEN_LOCAL_STORAGE_KEY = 'authToken';
-
 function Login() {
     const { handleSubmit, register } = useForm<LoginFormData>();
+
+    const { email, setToken } = useContext<AuthContextType>(AuthContext);
 
     const [login, { data, loading, error }] = useMutation(USER_LOGIN);
 
@@ -27,10 +29,9 @@ function Login() {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
-    console.log("Retour de data du login", data);
     if (data) {
         const token: string | undefined = data.login
-        token ? localStorage.setItem(AUTH_TOKEN_LOCAL_STORAGE_KEY, token) : null;
+        token ? setToken(token) : null;
     };
 
     return (
@@ -47,6 +48,7 @@ function Login() {
                 </label>
                 <input type="submit" value="Okidoki" />
             </form>
+            { email && "Utilisateur connecté : " + email}
         </>
     );
 }

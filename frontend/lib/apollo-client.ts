@@ -1,4 +1,4 @@
-import { AUTH_TOKEN_LOCAL_STORAGE_KEY } from '@/pages/login';
+import { AUTH_TOKEN_LOCAL_STORAGE_KEY } from '@/contexts/authContext';
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from "@apollo/client/link/context";
 

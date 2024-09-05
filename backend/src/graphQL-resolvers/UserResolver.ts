@@ -1,4 +1,4 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
 import { User } from "../entities/User";
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
@@ -67,4 +67,13 @@ export class UserResolver {
         return token;
     }
 
+    @Mutation(_ => Number)
+    async addStars(
+        @Arg('stars') stars: number,
+        @Arg('userId') userId: number,
+    ): Promise<Number> {
+        // ok alors je veux incrémenter les étoiles d'un user
+        // pour ça j'ai besoin de mon user, de son nombre d'étoile
+        // puis d'ajouter les étoiles à la BDD
+    }
 }
