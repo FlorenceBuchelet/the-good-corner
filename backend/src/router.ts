@@ -79,12 +79,12 @@ app.get("/ads/:id", async (req, res) => {
 
 // average category (TODO: add param)
 /* app.get("/ads/category/average", (req, res) => {
-    db.all(`SELECT AVG(price) AS price FROM ad
+    db.all(`SELECT AVG(stars) AS stars FROM ad
             JOIN category ON category.id = ad.category_id
             WHERE category.title = "autre";`, // TODO:requete préparée
         (err, rows: any) => {
             res.send(rows);
-            console.log('Average price in', 'autre', 'is', rows[0].price);
+            console.log('Average stars in', 'autre', 'is', rows[0].stars);
         })
 }) */
 
@@ -112,7 +112,7 @@ app.post("/ads", async (req, res) => {
     console.log("nad", nAd);
 
     try {
-        const ad = new Ad(nAd.title, nAd.description, nAd.author, nAd.price, nAd.createdAt, nAd.picture, nAd.city);
+        const ad = new Ad(nAd.title, nAd.description, nAd.author, nAd.stars, nAd.createdAt, nAd.picture, nAd.city);
         ad.category = nAd.category;
         console.log("ad", ad);
         await dataSource.manager.save(ad);
@@ -144,8 +144,8 @@ app.put("/ads/:id/star", async (req, res) => {
             id: id
         }
     });
-    if (ad && ad.price) {
-        ad.price! ++;
+    if (ad && ad.stars) {
+        ad.stars! ++;
     }
     await dataSource.manager.save(ad);
     res.status(200).send(ad);

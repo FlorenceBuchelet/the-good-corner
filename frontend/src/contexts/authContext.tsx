@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
 
+export enum AuthRole {
+    ADMIN = 'ADMIN',
+    USER = 'USER',
+}
+
 export interface AuthContextType {
     token?: string;
     email?: string;
     creationTime?: Date;
+    expirationTime?: Date;
+    role?: string;
 
     setToken: (token: string | null) => void;
 }
@@ -30,7 +37,9 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
             setContextData({
                 email: 'example@example.example',
                 token,
-                creationTime: new Date()
+                creationTime: new Date(),
+                expirationTime: new Date(), // FIXME:
+                role: 'ADMIN' //FIXME:
             });
         }
     }
@@ -46,3 +55,4 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         </AuthContext.Provider>
     )
 }
+

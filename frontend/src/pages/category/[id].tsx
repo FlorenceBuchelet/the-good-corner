@@ -30,12 +30,12 @@ function CategoryId() {
                             <AdCard
                                 picture={ad.picture}
                                 id={ad.id}
-                                price={ad.price}
+                                stars={ad.stars}
                                 title={ad.title}
                             />
                             <button
                                 className="button"
-                                onClick={() => setTotal(total + ad.price)}
+                                onClick={() => setTotal(total + ad.stars)}
                             >
                                 Add stars to total
                             </button>

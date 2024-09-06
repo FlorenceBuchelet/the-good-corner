@@ -23,9 +23,9 @@ export class Ad extends BaseEntity {
     @Field()
     owner: string;
 
-    @Column({ nullable: true })
+    @Column({ default: 0 })
     @Field(type => Int)
-    price?: number;
+    stars?: number;
 
     @Column({ nullable: true })
     @Field()
@@ -55,7 +55,7 @@ export class Ad extends BaseEntity {
         title: string = '',
         description: string | undefined = undefined,
         owner: string = '',
-        price?: number,
+        stars?: number,
         picture?: string,
         location?: string,
         createdAt?: Date,
@@ -65,7 +65,7 @@ export class Ad extends BaseEntity {
         this.title = title;
         this.description = description;
         this.owner = owner;
-        this.price = price;
+        this.stars = stars;
         this.picture = picture;
         this.location = location;
         this.createdAt = createdAt;

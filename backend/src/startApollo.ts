@@ -38,8 +38,8 @@ export async function startServerApollo() {
     // 3. initialisation de la datasource TypeORM
     await dataSource.initialize();
     // 3bis. appel des autres services d'initialisation
-    // await cleanDB();
-    // await initTestData();
+    //await cleanDB(); // ne fonctionne pas avec postgres
+    //await initTestData();
 
     // 4. démarrage du serveur et transmission du JWT
     const { url } = await startStandaloneServer(server, {

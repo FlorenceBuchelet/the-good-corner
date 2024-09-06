@@ -39,8 +39,6 @@ export class UserResolver {
         @Arg('password') password: string
     ): Promise<string> {
         // 1. Retrouver l'utilisateur
-        console.log("login in resolver started");
-        
         const user: User = await User.findOneOrFail({
             where: {
                 email
@@ -60,20 +58,26 @@ export class UserResolver {
             throw new Error('invalid JWT secret');
         }
 
-        const token: string = jwt.sign({ email, role: user.role }, jwtSecret);
-
-        console.log("token jwt in user resolver", token);
-
+        const token: string = jwt.sign({ email, role: user.role }, jwtSecret, {
+            expiresIn: '24h'
+        });
         return token;
     }
 
-    @Mutation(_ => Number)
-    async addStars(
+    // Incrémenter le total d'étoiles d'un user
+    @Mutation(_ => Int)
+    async addStarsToUser(
         @Arg('stars') stars: number,
         @Arg('userId') userId: number,
-    ): Promise<Number> {
-        // ok alors je veux incrémenter les étoiles d'un user
-        // pour ça j'ai besoin de mon user, de son nombre d'étoile
-        // puis d'ajouter les étoiles à la BDD
+    ): Promise<Number | undefined> {
+        const user: User | null = await User.findOneBy({ id: userId });
+        if (!user) {
+            throw new Error('No user found')
+        }
+        if (user.stars) {
+            user.stars += stars;
+            await user.save();
+        }
+        return user.stars;
     }
 }

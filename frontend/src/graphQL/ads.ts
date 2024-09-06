@@ -6,7 +6,7 @@ export const GET_ALL_ADS_QUERY = gql`
             id
             title
             description
-            price
+            stars
             picture
         }
     }
@@ -18,7 +18,7 @@ export const GET_AD_BY_ID = gql`
             id
             title
             description
-            price
+            stars
             picture
         }
     }
@@ -30,7 +30,7 @@ export const PUBLISH_AD = gql`
         $title: String!,
         $description: String!,
         $owner: String!,
-        $price: Int!,
+        $stars: Int!,
         $picture: String!,
         $location: String!,
         $categoryId: Int!,
@@ -40,7 +40,7 @@ export const PUBLISH_AD = gql`
             title: $title,
             description: $description,
             owner: $owner,
-            price: $price,
+            stars: $stars,
             picture: $picture,
             location: $location,
             categoryId: $categoryId,
@@ -50,7 +50,7 @@ export const PUBLISH_AD = gql`
             title
             description
             owner
-            price
+            stars
             picture
             location
             category

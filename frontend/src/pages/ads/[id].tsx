@@ -15,16 +15,20 @@ function AdId() {
         variables: { getAdByIdId: id }
     });
     console.log('👉👉 data', data);
-    
-    
+
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
-    
+
     const ad = data.getAdById;
+    setTotal(ad.stars);
 
     const handleGood = () => {
         if (ad) {
-            const deleteAd = async () => {
+            // Mettre à jour la BDD
+            
+            // Mettre à jour le front
+/*             const deleteAd = async () => {
                 try {
                     const response = await axios.put<AdCardProp>(`http://localhost:4000/ads/${id}/star`)
                     if (response.status === 200) {
@@ -35,7 +39,8 @@ function AdId() {
                     console.error(`${ad.title} hasn't been deleted`);
                 }
             }
-            deleteAd();
+            deleteAd(); */
+
         }
     }
 
@@ -65,7 +70,7 @@ function AdId() {
                 {ad && <AdCard
                     picture={ad.picture}
                     id={ad.id}
-                    price={total}
+                    stars={total}
                     title={ad.title}
                 />}
             </section>

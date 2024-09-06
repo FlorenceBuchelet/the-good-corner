@@ -13,7 +13,7 @@ function RecentAds() {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
-    console.log('Retour de apollo client pour ads ' , data);
+    console.log('Retour de apollo client pour ads ', data);
 
     return (
         <>
@@ -27,12 +27,12 @@ function RecentAds() {
                         <AdCard
                             picture={ad.picture}
                             id={ad.id}
-                            price={ad.price}
+                            stars={ad.stars}
                             title={ad.title}
                         />
                         <button
                             className="button"
-                            onClick={() => setTotal(total + ad.price)}
+                            onClick={() => setTotal(total + ad.stars)}
                         >
                             Add stars to total
                         </button>

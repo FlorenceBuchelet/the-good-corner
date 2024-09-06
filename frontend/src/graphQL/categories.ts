@@ -16,7 +16,7 @@ query GetCategoryById($getCategoryByIdId: Float!) {
         name
         ads {
             title
-            price
+            stars
         picture
         owner
         location

@@ -24,7 +24,7 @@ export class AdResolver {
     }
 
     @Authorized()
-    @Query(type => [Ad]) 
+    @Query(type => [Ad])
     async getAllAds(): Promise<Ad[]> {
         const ads: Ad[] = await Ad.find({});
         return ads;
@@ -41,7 +41,7 @@ export class AdResolver {
         @Arg("title") title: string,
         @Arg("description", { nullable: true }) description: string,
         @Arg("owner") owner: string,
-        @Arg("price", { nullable: true }) price: number,
+        @Arg("stars", { nullable: true }) stars: number,
         @Arg("picture", { nullable: true }) picture: string,
         @Arg("location", { nullable: true }) location: string,
         @Arg("categoryId", { nullable: true }) categoryId: number,
@@ -51,13 +51,13 @@ export class AdResolver {
         ad.title = title;
         ad.description = description;
         ad.owner = owner;
-        ad.price = price;
+        ad.stars = stars;
         ad.picture = picture;
         ad.location = location;
 
         // Gestion de la catégorie
         if (categoryId) {
-            const category = await Category.findOneBy({ id: categoryId});
+            const category = await Category.findOneBy({ id: categoryId });
             if (category) {
                 ad.category = category;
             }
@@ -74,5 +74,21 @@ export class AdResolver {
         return ad;
     }
 
+    // Incrémenter le total d'étoiles d'une ad
+    @Mutation(_ => Int)
+    async addStarsToAd(
+        @Arg('stars') stars: number,
+        @Arg('adId') adId: number,
+    ): Promise<Number | undefined> {
+        const ad: Ad | null = await Ad.findOneBy({ id: adId });
+        if (!ad) {
+            throw new Error('No user found')
+        }
+        if (ad.stars) {
+            ad.stars += stars;
+            await ad.save();
+        }
+        return ad.stars;
+    }
 
 }

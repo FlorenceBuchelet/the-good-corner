@@ -8,7 +8,7 @@ interface formProp {
     city: string;
     description: string;
     picture: string;
-    price: number;
+    stars: number;
     title: string;
 }
 
@@ -18,20 +18,20 @@ function Submit() {
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault();
 
-        
+
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
         formData.append("createdAt", Date());
         const formJson = Object.fromEntries(formData.entries());
-        
+
         console.log(formJson);
         try {
             await axios.post("http://localhost:4000/ads", formJson);
             console.log("probably ok");
-            
+
         } catch (err) {
             console.error("error adding an ad: ", err);
-            
+
         }
     }
 
@@ -67,7 +67,7 @@ function Submit() {
                 </>
                 <>
                     <label>Prix:</label>
-                    <input type="number" name="price" />
+                    <input type="number" name="stars" />
                 </>
                 <>
                     <label>Image:</label>

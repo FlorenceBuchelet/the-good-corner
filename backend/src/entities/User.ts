@@ -17,13 +17,11 @@ export class User extends BaseEntity {
     @Field()
     role: string;
 
-    @Column()
+    @Column({ default: 0 })
     @Field()
-    stars: number;
+    stars?: number;
 
     @Column()
-    // FIXME: Pas de Field parce qu'il ne peut pas être requêté
-    // @Field()
     passwordHashed: string;
 
     constructor(
